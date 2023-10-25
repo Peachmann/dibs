@@ -17,6 +17,9 @@
 
 # Go workspace file
 go.work
+go.work.sum
+backend/tmp/
+backend/configs/
 
 ### Node ###
 # Logs
