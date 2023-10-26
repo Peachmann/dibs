@@ -1,0 +1,112 @@
+[
+  {
+    "item_id": "1",
+    "seller_id": "101",
+    "title": "Vintage Wooden Chair",
+    "description": "A beautifully crafted vintage wooden chair in excellent condition.",
+    "price": 75.0,
+    "picture": "./src/assets/item.png",
+    "created_at": "2023-10-20T10:30:00Z",
+    "sold_at": "2023-10-25T15:45:00Z",
+    "pickup_point": "123 Main St, Townsville"
+  },
+  {
+    "item_id": "2",
+    "seller_id": "102",
+    "title": "Antique Vase",
+    "description": "A stunning porcelain vase from the 19th century, no chips or cracks.",
+    "price": 120.5,
+    "picture": "./src/assets/item.png",
+    "created_at": "2023-10-15T09:20:00Z",
+    "sold_at": "2023-10-22T12:30:00Z",
+    "pickup_point": "456 Elm St, Cityville"
+  },
+  {
+    "item_id": "3",
+    "seller_id": "103",
+    "title": "Classic Vinyl Record Collection",
+    "description": "A collection of classic vinyl records in great condition. Artists include The Beatles, Queen, and David Bowie.",
+    "price": 200.0,
+    "picture": "./src/assets/item.png",
+    "created_at": "2023-10-18T14:10:00Z",
+    "sold_at": "2023-10-24T16:00:00Z",
+    "pickup_point": "789 Oak St, Village"
+  },
+  {
+    "item_id": "4",
+    "seller_id": "104",
+    "title": "Retro Gaming Console",
+    "description": "A retro gaming console from the 90s, comes with two controllers and a selection of games.",
+    "price": 150.0,
+    "picture": "./src/assets/item.png",
+    "created_at": "2023-10-10T11:00:00Z",
+    "sold_at": "2023-10-20T13:00:00Z",
+    "pickup_point": "159 Pine St, Hamlet"
+  },
+  {
+    "item_id": "5",
+    "seller_id": "105",
+    "title": "Handmade Quilt",
+    "description": "A cozy, handmade quilt in a unique design. Perfect for chilly nights!",
+    "price": 85.0,
+    "picture": "./src/assets/item.png",
+    "created_at": "2023-10-05T12:45:00Z",
+    "sold_at": "2023-10-15T14:30:00Z",
+    "pickup_point": "357 Birch St, Metropolis"
+  },
+  {
+    "item_id": "6",
+    "seller_id": "106",
+    "title": "Vintage Typewriter",
+    "description": "A working vintage typewriter from the 1950s, a great piece for collectors or as a unique home decor item.",
+    "price": 100.0,
+    "picture": "./src/assets/item.png",
+    "created_at": "2023-10-08T10:15:00Z",
+    "sold_at": "2023-10-18T11:45:00Z",
+    "pickup_point": "864 Maple St, Borough"
+  },
+  {
+    "item_id": "7",
+    "seller_id": "107",
+    "title": "Hand-Painted Ceramic Bowl",
+    "description": "A beautiful hand-painted ceramic bowl, perfect for serving or as a decorative piece.",
+    "price": 40.0,
+    "picture": "./src/assets/item.png",
+    "created_at": "2023-10-03T14:30:00Z",
+    "sold_at": "2023-10-13T15:00:00Z",
+    "pickup_point": "246 Willow St, District"
+  },
+  {
+    "item_id": "8",
+    "seller_id": "108",
+    "title": "Vintage Camera",
+    "description": "A fully functional vintage camera from the 1960s, a great find for photography enthusiasts.",
+    "price": 130.0,
+    "picture": "./src/assets/item.png",
+    "created_at": "2023-10-01T16:00:00Z",
+    "sold_at": "2023-10-11T17:15:00Z",
+    "pickup_point": "135 Cedar St, Province"
+  },
+  {
+    "item_id": "9",
+    "seller_id": "109",
+    "title": "Handcrafted Wooden Puzzle",
+    "description": "A challenging handcrafted wooden puzzle, made with great attention to detail.",
+    "price": 25.0,
+    "picture": "./src/assets/item.png",
+    "created_at": "2023-10-07T13:30:00Z",
+    "sold_at": "2023-10-17T14:45:00Z",
+    "pickup_point": "975 Fir St, County"
+  },
+  {
+    "item_id": "10",
+    "seller_id": "110",
+    "title": "Vintage Book Collection",
+    "description": "A collection of vintage books in good condition, ranging from classics to rare finds.",
+    "price": 175.0,
+    "picture": "./src/assets/item.png",
+    "created_at": "2023-10-12T15:15:00Z",
+    "sold_at": "2023-10-22T16:30:00Z",
+    "pickup_point": "789 Spruce St, Capital"
+  }
+]
