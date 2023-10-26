@@ -1,11 +1,17 @@
 import axios from 'axios';
 import { useEffect } from 'react';
 
+const httpClient = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  headers: {
+    'ngrok-skip-browser-warning': 'true'
+  },
+});
+
 function Navbar() {
 
   const loginWithTelegram = () => {
-    const url = "http://localhost:8080/api/hello"
-    axios.get(url)
+    httpClient.get("/api/hello")
       .then((response) => {
         console.log(response);
       });
