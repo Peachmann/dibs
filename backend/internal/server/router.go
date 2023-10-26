@@ -6,12 +6,14 @@ import (
 
 	"dibs/internal/database"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func setRouter() *gin.Engine {
 	// Creates default gin router with Logger and Recovery middleware already attached
 	router := gin.Default()
+	router.Use(cors.Default())
 
 	// Create API route group
 	api := router.Group("/api")

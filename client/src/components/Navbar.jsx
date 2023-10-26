@@ -1,4 +1,16 @@
+import axios from 'axios';
+import { useEffect } from 'react';
+
 function Navbar() {
+
+  const loginWithTelegram = () => {
+    const url = "http://localhost:8080/api/hello"
+    axios.get(url)
+      .then((response) => {
+        console.log(response);
+      });
+  }
+
   return (
     <div style={styles.navbar}>
       <h1 style={styles.title}>Dibs</h1>
@@ -24,7 +36,7 @@ function Navbar() {
       </select>
       <button
         style={styles.button}
-        //onClick={loginWithTelegram}
+        onClick={loginWithTelegram}
       >
         Login with Telegram
       </button>
