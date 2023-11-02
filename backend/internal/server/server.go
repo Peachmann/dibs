@@ -2,7 +2,7 @@ package server
 
 import (
 	"context"
-	db "dibs/internal/database"
+	"dibs/internal/database"
 	"log"
 	"net"
 	"os"
@@ -21,9 +21,9 @@ func ngrokListener(ctx context.Context) (net.Listener, error) {
 }
 
 func Start() {
-	router := setRouter()
+	router := SetRouter()
 
-	db.InitConnectionPool()
+	database.InitDB()
 
 	// Start listening and serving requests - dev only
 	listener, err := ngrokListener(context.Background())

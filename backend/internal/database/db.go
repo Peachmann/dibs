@@ -1,15 +1,16 @@
 package database
 
 import (
-	"context"
+	"dibs/internal/models"
 	"log"
 	"os"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-var db *pgxpool.Pool
+var db *gorm.DB
 
 func loadEnv() {
 	err := godotenv.Load("configs/database.env")
@@ -27,23 +28,37 @@ func createDatabaseUrl() string {
 	return "postgres://" + user + ":" + password + "@" + container + "/" + database
 }
 
-func InitConnectionPool() {
 
+
+func InitDB() (*gorm.DB, error) {
 	loadEnv()
 
-	poolConfig, err := pgxpool.ParseConfig(createDatabaseUrl())
+	dsn := createDatabaseUrl()
+	var err error
+	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatalln("Unable to parse DATABASE_URL:", err)
+		log.Fatal("Failed to connect to database:", err)
 	}
 
-	db, err = pgxpool.NewWithConfig(context.Background(), poolConfig)
+	sqlDB, err := db.DB()
 	if err != nil {
-		log.Fatalln("Unable to create connection pool:", err)
+		log.Fatal("Failed to get database connection:", err)
 	}
 
-	log.Println("Connected to database")
+	err = sqlDB.Ping()
+	if err != nil {
+		log.Fatal("Failed to ping database:", err)
+	}
+
+	err = db.AutoMigrate(&models.User{}, &models.ItemListing{}, &models.Dibs{})
+	if err != nil {
+		return nil, err
+	}
+
+	log.Println("Connected to database and performed AutoMigrate")
+	return db, nil
 }
 
-func GetConnection() *pgxpool.Pool {
+func GetDB() *gorm.DB {
 	return db
 }
