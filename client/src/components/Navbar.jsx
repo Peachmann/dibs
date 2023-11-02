@@ -1,84 +1,36 @@
-import axios from 'axios';
-import { useEffect } from 'react';
-
-const httpClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-  headers: {
-    'ngrok-skip-browser-warning': 'true'
-  },
-});
-
 function Navbar() {
-
   const loginWithTelegram = () => {
-    httpClient.get("/api/hello")
-      .then((response) => {
-        console.log(response);
-      });
-  }
+    console.log('hello');
+  };
 
   return (
-    <div style={styles.navbar}>
-      <h1 style={styles.title}>Dibs</h1>
+    <div className="navbar">
+      <h1 className="title">Dibs</h1>
       <input
         type="text"
         placeholder="Search..."
-        //style={styles.searchInput}
-        //onChange={(e) => setSearchTerm(e.target.value)}
+        className="search-input"
+        // onChange={(e) => setSearchTerm(e.target.value)}
       />
-      <label style={styles.checkboxLabel}>
+      <label className="checkbox-label">
         <input
           type="checkbox"
-          //onChange={(e) => setShowUndibsed(e.target.checked)}
+          // onChange={(e) => setShowUndibsed(e.target.checked)}
         />
         Only show undibsed items
       </label>
       <label>Sort by:</label>
       <select
-        style={styles.dropdown}
-        //onChange={(e) => setFilter(e.target.value)}
+        className="dropdown"
+        // onChange={(e) => setFilter(e.target.value)}
       >
         <option value="price">Price</option>
       </select>
-      <button
-        style={styles.button}
-        onClick={loginWithTelegram}
-      >
+      <button className="button" onClick={loginWithTelegram}>
         Login with Telegram
       </button>
     </div>
   );
 }
-
-const styles = {
-  navbar: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: '10px 20px',
-    borderBottom: '1px solid #ccc',
-  },
-  title: {
-    fontSize: '24px',
-    margin: '0',
-  },
-  searchInput: {
-    fontSize: '16px',
-    padding: '8px',
-  },
-  checkboxLabel: {
-    fontSize: '16px',
-    marginLeft: '10px',
-  },
-  dropdown: {
-    fontSize: '16px',
-    padding: '8px',
-  },
-  button: {
-    fontSize: '16px',
-    padding: '8px 16px',
-    cursor: 'pointer',
-  },
-};
 
 export default Navbar;
