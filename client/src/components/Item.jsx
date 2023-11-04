@@ -9,13 +9,8 @@ function Item({ item }) {
       <div className="footer">
         <div>
           <p className="price">${item.Price.toFixed(2)}</p>
-          <p className="pickup-point">{item.PickupPoint}</p>
         </div>
         <button className="button">Dibs</button>
-      </div>
-      <div className="seller-info">
-        <p>Sold by: {item.Seller.DisplayName || 'Unknown'}</p>
-        <p>Contact: {item.Seller.TelegramID || 'N/A'}</p>
       </div>
     </div>
   );
