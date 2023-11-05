@@ -1,8 +1,5 @@
-function Navbar() {
-  const loginWithTelegram = () => {
-    console.log('hello');
-  };
 
+const Navbar = () => {
   return (
     <div className="navbar">
       <h1 className="title">Dibs</h1>
@@ -26,9 +23,7 @@ function Navbar() {
       >
         <option value="price">Price</option>
       </select>
-      <button className="button" onClick={loginWithTelegram}>
-        Login with Telegram
-      </button>
+      
     </div>
   );
 }
