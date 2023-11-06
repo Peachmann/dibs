@@ -32,6 +32,12 @@ func SetRouter() *gin.Engine {
 		api.POST("/items", func(c *gin.Context) {
 			controllers.CreateItem(c, database.GetDB())
 		})
+		api.DELETE("/items/:id", func(c *gin.Context) {
+			controllers.DeleteItemByID(c, database.GetDB())
+		})
+		api.PATCH("/items/:id", func(c *gin.Context) {
+			controllers.EditItemByID(c, database.GetDB())
+		})
 	}
 
 	router.NoRoute(func(ctx *gin.Context) { ctx.JSON(http.StatusNotFound, gin.H{}) })

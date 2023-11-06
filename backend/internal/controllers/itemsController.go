@@ -32,3 +32,43 @@ func CreateItem(c *gin.Context, db *gorm.DB) {
 
 	c.JSON(http.StatusCreated, newItem)
 }
+
+func DeleteItemByID(c *gin.Context, db *gorm.DB) {
+    id := c.Param("id")
+
+    var result = db.Delete(&models.ItemListing{}, id)
+    if result.Error != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete item listing"})
+        return
+    }
+
+    if result.RowsAffected == 0 {
+        c.JSON(http.StatusNotFound, gin.H{"error": "No item found with the given ID"})
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{"message": "Item deleted successfully"})
+}
+
+func EditItemByID(c *gin.Context, db *gorm.DB) {
+    id := c.Param("id")
+    var updates map[string]interface{}
+
+    if err := c.ShouldBindJSON(&updates); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
+        return
+    }
+
+    result := db.Model(&models.ItemListing{}).Where("id = ?", id).Updates(updates)
+    if result.Error != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update item listing"})
+        return
+    }
+
+    if result.RowsAffected == 0 {
+        c.JSON(http.StatusNotFound, gin.H{"error": "No item found with the given ID"})
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{"message": "Item updated successfully"})
+}

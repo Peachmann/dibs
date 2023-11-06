@@ -13,15 +13,14 @@ type User struct {
 }
 
 type ItemListing struct {
-    gorm.Model
-    SellerID    uint
-    Title       string
-    Description string
-    Price       float64
-    Picture     string
-    SoldAt      *time.Time
-    PickupPoint string
-    Seller      User `gorm:"foreignKey:SellerID"`
+	gorm.Model
+	SellerID    uint       `json:"seller_id" binding:"required"`
+	Title       string     `json:"title" binding:"required"`
+	Description string     `json:"description"`
+	Price       float64    `json:"price" binding:"required"`
+	Picture     string     `json:"picture"`
+	SoldAt      *time.Time `json:"sold_at"`
+	PickupPoint string     `json:"pickup_point"`
 }
 
 type Dibs struct {
