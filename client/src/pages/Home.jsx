@@ -1,7 +1,7 @@
 import Layout from '../components/Layout';
 import { useState, useEffect } from 'react';
 import * as itemService from '../services/itemService';
-import { AvailableItem } from '../components/AvailableItem';
+import { AvailableItem, CardWithOverlay } from '../components/AvailableItem';
 //import Grid from '@mui/material/Unstable_Grid2';
 import Grid from '@mui/material/Grid';
 
@@ -38,7 +38,8 @@ export const Home = () => {
           >
             {items.map((item) => (
               <Grid item xs={2} sm={4} md={4} key={item.ID}>
-                <AvailableItem item={item}></AvailableItem>
+                {/* <AvailableItem item={item}></AvailableItem> */}
+                <CardWithOverlay item={item}></CardWithOverlay>
               </Grid>
             ))}
           </Grid>
