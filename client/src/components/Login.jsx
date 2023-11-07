@@ -1,12 +1,12 @@
 import TelegramLoginButton from 'react-telegram-login';
 import { loginHandler } from '../services/AuthService';
-import { useNavigate } from "react-router-dom";
+import { useAuth } from '../services/AuthContext';
 
 const Login = () => {
-  const navigate = useNavigate();
-  
+  const { setAuth } = useAuth();
+
   const localHandler = (response) => {
-    loginHandler(response, navigate);
+    loginHandler(response, setAuth);
   };
 
   return (

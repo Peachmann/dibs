@@ -1,19 +1,32 @@
 import '../styles.css';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
-function Item({ item }) {
+export const AvailableItem = ({ item }) => {
   return (
-    <div className="card">
-      <img src={item.picture} alt={item.title} className="image" />
-      <h3 className="title">{item.title}</h3>
-      <p className="description">{item.description}</p>
-      <div className="footer">
-        <div>
-          <p className="price">${item.price.toFixed(2)}</p>
-        </div>
-        <button className="button">Dibs</button>
-      </div>
-    </div>
+    <Card variant='outlined' sx={{ maxWidth: 345 }}>
+      <CardMedia
+        sx={{ height: 140 }}
+        image={item.picture}
+        title={item.title}
+      />
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+          {item.title}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {item.description}
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button size="small">DIBS</Button>
+      </CardActions>
+    </Card>
   );
-}
+};
 
 export default Item;

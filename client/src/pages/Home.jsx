@@ -1,15 +1,11 @@
 import Layout from '../components/Layout';
 import { useState, useEffect } from 'react';
 import * as itemService from '../services/itemService';
-import Item from '../components/Item';
-import { useNavigate } from 'react-router-dom';
-import { isAuthenticated } from '../services/AuthService';
+import { AvailableItem } from '../components/Item';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Box } from '@mui/material';
 
 export const Home = () => {
-  const navigate = useNavigate();
-  if (!isAuthenticated()) {
-    navigate('/login');
-  }
 
   const [items, setItems] = useState([]);
 
@@ -33,11 +29,15 @@ export const Home = () => {
   return (
     <>
       <Layout>
-        <div className="grid">
-          {items.map((item) => (
-            <Item key={item.ID} item={item} />
-          ))}
-        </div>
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+            {items.map((item) => (
+                <Grid xs={2} sm={4} md={4}>
+                  <AvailableItem item={item}></AvailableItem>
+                </Grid>
+            ))}
+          </Grid>
+        </Box>
       </Layout>
     </>
   );

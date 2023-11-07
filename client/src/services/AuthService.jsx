@@ -1,15 +1,21 @@
 import { SHA256, enc, HmacSHA256 } from "crypto-js";
 
-export const loginHandler = (response, navigate) => {
+export const loginHandler = (response, setAuth) => {
   if (!validate(response)) {
     console.log("Invalid login");
     return "Invalid login";
   }
-
 	localStorage.setItem('user', JSON.stringify(response));
+  setAuth(true);
+
   console.log("Logged in");
 
-  navigate("/");
+};
+
+export const logoutHandler = (setAuth) => {
+  //localStorage.removeItem('user');
+  setAuth(false);
+  console.log("Logged out");
 };
 
 const validate = async (data) => {
@@ -26,12 +32,4 @@ const validate = async (data) => {
   const check_hash = HmacSHA256(data_check_string, secretKey).toString(enc.Hex);
 
   return check_hash == data.hash;
-};
-
-export const isAuthenticated = () => {
-	const user = localStorage.getItem('user');
-	if (!user) {
-		return {}
-	}
-	return JSON.parse(user);
 };
