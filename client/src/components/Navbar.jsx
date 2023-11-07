@@ -1,11 +1,27 @@
-import Login from "./Login";
-import { useAuth } from "../services/AuthContext";
-import { logoutHandler } from "../services/AuthService";
-import { Button, Tooltip, Avatar, AppBar, Box, Toolbar, IconButton, Container, Menu, MenuItem, Typography } from "@mui/material";
+import Login from './Login';
+import { useAuth } from '../services/AuthContext';
+import { logoutHandler } from '../services/AuthService';
+import {
+  Button,
+  Tooltip,
+  Avatar,
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Container,
+  Menu,
+  MenuItem,
+  Typography,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useState } from "react";
+import { useState } from 'react';
 
-const AvatarButton = ({ anchorElUser, handleOpenUserMenu, handleCloseUserMenu }) => {
+const AvatarButton = ({
+  anchorElUser,
+  handleOpenUserMenu,
+  handleCloseUserMenu,
+}) => {
   const { setAuth, user } = useAuth();
 
   return (
@@ -38,10 +54,13 @@ const AvatarButton = ({ anchorElUser, handleOpenUserMenu, handleCloseUserMenu })
             </MenuItem>
           ))}
 
-          <MenuItem key="Logout" onClick={() => {
-            handleCloseUserMenu();
-            logoutHandler(setAuth);
-            }}>
+          <MenuItem
+            key="Logout"
+            onClick={() => {
+              handleCloseUserMenu();
+              logoutHandler(setAuth);
+            }}
+          >
             <Typography textAlign="center">Logout</Typography>
           </MenuItem>
         </Menu>
@@ -160,15 +179,19 @@ const CustomNavbar = () => {
             ))}
           </Box>
 
-          {auth ? ( <AvatarButton handleCloseUserMenu={handleCloseUserMenu}
-          handleOpenUserMenu={handleOpenUserMenu}
-          anchorElUser={anchorElUser} /> ) : ( <Login /> )}
-
+          {auth ? (
+            <AvatarButton
+              handleCloseUserMenu={handleCloseUserMenu}
+              handleOpenUserMenu={handleOpenUserMenu}
+              anchorElUser={anchorElUser}
+            />
+          ) : (
+            <Login />
+          )}
         </Toolbar>
       </Container>
     </AppBar>
   );
-
 };
 
 export default CustomNavbar;

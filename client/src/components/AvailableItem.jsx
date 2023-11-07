@@ -8,12 +8,8 @@ import Typography from '@mui/material/Typography';
 
 export const AvailableItem = ({ item }) => {
   return (
-    <Card variant='outlined' sx={{ maxWidth: 345 }}>
-      <CardMedia
-        sx={{ height: 140 }}
-        image={item.picture}
-        title={item.title}
-      />
+    <Card variant="outlined" sx={{ maxWidth: 345 }}>
+      <CardMedia sx={{ height: 140 }} image={item.picture} title={item.title} />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           {item.title}
@@ -29,4 +25,4 @@ export const AvailableItem = ({ item }) => {
   );
 };
 
-export default Item;
+export default AvailableItem;
