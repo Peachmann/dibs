@@ -8,6 +8,33 @@ import (
 	"gorm.io/gorm"
 )
 
+/*func checkTelegramAuthorization(data, token string) bool {
+	params, _ := url.ParseQuery(data)
+	strs := []string{}
+	var hash = ""
+	for k, v := range params {
+		if k == "hash" {
+			hash = v[0]
+			continue
+		}
+		strs = append(strs, k+"="+v[0])
+	}
+	sort.Strings(strs)
+	var imploded = ""
+	for _, s := range strs {
+		if imploded != "" {
+			imploded += "\n"
+		}
+		imploded += s
+	}
+	sha256hash := sha256.New()
+	io.WriteString(sha256hash, token)
+	hmachash := hmac.New(sha256.New, sha256hash.Sum(nil))
+	io.WriteString(hmachash, imploded)
+	ss := hex.EncodeToString(hmachash.Sum(nil))
+	return hash == ss
+}*/
+
 func ListItems(c *gin.Context, db *gorm.DB) {
 	var items []models.ItemListing
 	if result := db.Find(&items); result.Error != nil {
