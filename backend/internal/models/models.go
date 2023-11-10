@@ -21,6 +21,7 @@ type ItemListing struct {
 	Picture     string     `json:"picture"`
 	SoldAt      *time.Time `json:"sold_at"`
 	PickupPoint string     `json:"pickup_point"`
+	IsDibsed 	bool	   `json:"is_dibsed"`
 }
 
 type Dibs struct {

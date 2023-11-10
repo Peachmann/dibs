@@ -18,7 +18,8 @@ CREATE TABLE item_listings (
     price NUMERIC NOT NULL,
     picture VARCHAR(256),
     sold_at TIMESTAMP,
-    pickup_point VARCHAR(256)
+    pickup_point VARCHAR(256),
+    is_dibsed BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE dibs (
