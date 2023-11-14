@@ -18,11 +18,11 @@ type ItemListing struct {
 
 type Dibs struct {
     gorm.Model
-    Active          bool        `gorm:"default:true"`
-    ItemID          uint        `json:"item_id"`
-    Item            ItemListing `gorm:"foreignKey:ItemID"`
-    BuyerUsername   string      `json:"buyer_username"`
+    Active        bool        `gorm:"default:true"`
+    ItemID        uint        `json:"item_id" gorm:"column:item_listing_id"`
+    BuyerUsername string      `json:"buyer_username"`
 }
+
 
 type User struct {
 	ID        uint   `json:"id"`
