@@ -19,8 +19,21 @@ func SetRouter() *gin.Engine {
 
 	// Setting CORS config
 	config := cors.DefaultConfig()
-	config.AllowAllOrigins = true
-	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization", "ngrok-skip-browser-warning"}
+	config.AllowAllOrigins = true // Allows requests from all origins
+	config.AllowHeaders = []string{
+		"Origin",
+		"Content-Length",
+		"Content-Type",
+		"Authorization",
+		"ngrok-skip-browser-warning",
+		"User-Id",             // Custom header
+		"First-Name",          // Custom header
+		"Last-Name",           // Custom header
+		"Username",            // Custom header
+		"Photo-Url",           // Custom header
+		"Auth-Date",           // Custom header
+		"Auth-Hash",           // Custom header
+	}
 	router.Use(cors.New(config))
 
 	api := router.Group("/api")

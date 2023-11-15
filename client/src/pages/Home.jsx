@@ -29,6 +29,7 @@ export const Home = () => {
 
   return (
     <>
+      <button onClick={itemService.createItem}>Send POST Request</button>
       <Layout>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
