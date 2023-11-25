@@ -33,3 +33,4 @@ type User struct {
 	AuthDate  string `json:"auth_date"`
 	Hash      string `json:"hash"`
 }
+

@@ -1,9 +1,10 @@
 package controllers
 
 import (
+	"dibs/internal/models"
+
 	"crypto/hmac"
 	"crypto/sha256"
-	"dibs/internal/models"
 	"encoding/hex"
 	"fmt"
 	"io"
@@ -12,44 +13,39 @@ import (
 	"os"
 	"reflect"
 	"sort"
-	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
-// authorizeUser checks the user's authorization
-func authorizeUser(c *gin.Context) bool {
-	userDataQueryString := structToQueryString(models.User{
-		ID:        uint(getUserID(c)),
-		FirstName: c.GetHeader("First-Name"),
-		LastName:  c.GetHeader("Last-Name"),
-		Username:  c.GetHeader("Username"),
-		PhotoURL:  c.GetHeader("Photo-Url"),
-		AuthDate:  c.GetHeader("Auth-Date"),
-		Hash:      c.GetHeader("Auth-Hash"),
-	})
-
-	telegramToken := os.Getenv("TELEGRAM_TOKEN")
-	if telegramToken == "" {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Telegram token not found"})
-		return false
-	}
-
-	if !checkTelegramAuthorization(userDataQueryString, telegramToken) {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-		return false
-	}
-
-	return true
+type ListingRequestBody struct {
+    User        models.User        `json:"user"`
+    ItemListing models.ItemListing `json:"item_listing"`
 }
 
-// getUserID extracts and returns the user ID from the context
-func getUserID(c *gin.Context) int {
-	userIdStr := c.GetHeader("User-Id")
-	userId, _ := strconv.Atoi(userIdStr)
-	return userId
+type DibsRequestBody struct {
+    User        models.User        `json:"user"`
+    Dibs		models.Dibs		   `json:"dibs"`
 }
+
+func authorizeUser(c *gin.Context, user models.User) bool {
+    userDataQueryString := structToQueryString(user)
+
+    telegramToken := os.Getenv("TELEGRAM_TOKEN")
+    if telegramToken == "" {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Telegram token not found"})
+        return false
+    }
+
+    // Check authorization using the query string
+    if !checkTelegramAuthorization(userDataQueryString, telegramToken) {
+        c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+        return false
+    }
+
+    return true
+}
+
 
 func structToQueryString(data interface{}) string {
     v := reflect.ValueOf(data)

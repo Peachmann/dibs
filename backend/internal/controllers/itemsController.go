@@ -3,61 +3,25 @@ package controllers
 import (
 	"dibs/internal/models"
 	"net/http"
-	"os"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
-type CreateItemRequest struct {
-	User models.User        `json:"user"`
-	Item models.ItemListing `json:"item"`
-}
-
 func CreateItem(c *gin.Context, db *gorm.DB) {
-    // Extracting user data from headers
-    userIdStr := c.GetHeader("User-Id")
-    userId, err := strconv.Atoi(userIdStr)
-    if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+    var requestBody ListingRequestBody
+
+    if err := c.BindJSON(&requestBody); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Inva123lid request body"})
         return
     }
 
-    userData := models.User{
-        ID:        uint(userId),
-        FirstName: c.GetHeader("First-Name"),
-        LastName:  c.GetHeader("Last-Name"),
-        Username:  c.GetHeader("Username"),
-        PhotoURL:  c.GetHeader("Photo-Url"),
-        AuthDate:  c.GetHeader("Auth-Date"),
-        Hash:      c.GetHeader("Auth-Hash"),
-    }
-
-    // Convert User data to query string format for authorization check
-    userDataQueryString := structToQueryString(userData)
-
-    // Get the Telegram token from the environment variable
-    telegramToken := os.Getenv("TELEGRAM_TOKEN")
-    if telegramToken == "" {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "Telegram token not found"})
+    if !authorizeUser(c, requestBody.User) {
         return
     }
 
-    // Check Telegram Authorization
-    if !checkTelegramAuthorization(userDataQueryString, telegramToken) {
-        c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-        return
-    }
-
-    // Proceed with creating the item
-    var newItem models.ItemListing
-    if err := c.ShouldBindJSON(&newItem); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
-        return
-    }
-
-    newItem.SellerUsername = userData.Username // Set the seller username from the authorized user
+    newItem := requestBody.ItemListing
+    newItem.SellerUsername = requestBody.User.Username
 
     if result := db.Create(&newItem); result.Error != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create item listing"})
@@ -66,7 +30,6 @@ func CreateItem(c *gin.Context, db *gorm.DB) {
 
     c.JSON(http.StatusCreated, newItem)
 }
-
 
 func ListItems(c *gin.Context, db *gorm.DB) {
 	var items []models.ItemListing
@@ -78,124 +41,64 @@ func ListItems(c *gin.Context, db *gorm.DB) {
 }
 
 func DeleteItemByID(c *gin.Context, db *gorm.DB) {
-	id := c.Param("id")
-
-	// Extracting user data from headers
-	userIdStr := c.GetHeader("User-Id")
-	userId, err := strconv.Atoi(userIdStr)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
-		return
-	}
-
-	userData := models.User{
-		ID:        uint(userId),
-		FirstName: c.GetHeader("First-Name"),
-		LastName:  c.GetHeader("Last-Name"),
-		Username:  c.GetHeader("Username"),
-		PhotoURL:  c.GetHeader("Photo-Url"),
-		AuthDate:  c.GetHeader("Auth-Date"),
-		Hash:      c.GetHeader("Auth-Hash"),
-	}
-
-	// Convert User data to query string format for authorization check
-	userDataQueryString := structToQueryString(userData)
-
-	// Get the Telegram token from the environment variable
-	telegramToken := os.Getenv("TELEGRAM_TOKEN")
-	if telegramToken == "" {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Telegram token not found"})
-		return
-	}
-
-	// Check Telegram Authorization
-	if !checkTelegramAuthorization(userDataQueryString, telegramToken) {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-		return
-	}
-
-	// Fetch the item from the database
-	var item models.ItemListing
-	if result := db.First(&item, id); result.Error != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "No item found with the given ID"})
-		return
-	}
-
-	// Check if the username matches
-	if item.SellerUsername != userData.Username {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized to delete this item"})
-		return
-	}
-
-	// Delete the item
-	if result := db.Delete(&item); result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete item listing"})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"message": "Item deleted successfully"})
-}
-
-
-func EditItemByID(c *gin.Context, db *gorm.DB) {
     id := c.Param("id")
 
-    // Extracting user data from headers
-    userIdStr := c.GetHeader("User-Id")
-    userId, err := strconv.Atoi(userIdStr)
-    if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+    var requestBody ListingRequestBody
+
+    if err := c.BindJSON(&requestBody); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
         return
     }
 
-    userData := models.User{
-        ID:        uint(userId),
-        FirstName: c.GetHeader("First-Name"),
-        LastName:  c.GetHeader("Last-Name"),
-        Username:  c.GetHeader("Username"),
-        PhotoURL:  c.GetHeader("Photo-Url"),
-        AuthDate:  c.GetHeader("Auth-Date"),
-        Hash:      c.GetHeader("Auth-Hash"),
-    }
-
-    // Convert User data to query string format for authorization check
-    userDataQueryString := structToQueryString(userData)
-
-    // Get the Telegram token from the environment variable
-    telegramToken := os.Getenv("TELEGRAM_TOKEN")
-    if telegramToken == "" {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "Telegram token not found"})
+    if !authorizeUser(c, requestBody.User) {
         return
     }
 
-    // Check Telegram Authorization
-    if !checkTelegramAuthorization(userDataQueryString, telegramToken) {
-        c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-        return
-    }
-
-    // Fetch the item from the database
     var item models.ItemListing
     if result := db.First(&item, id); result.Error != nil {
         c.JSON(http.StatusNotFound, gin.H{"error": "No item found with the given ID"})
         return
     }
 
-    // Check if the username matches
-    if item.SellerUsername != userData.Username {
+    if item.SellerUsername != requestBody.User.Username {
+        c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized to delete this item"})
+        return
+    }
+
+    if result := db.Delete(&item); result.Error != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete item listing"})
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{"message": "Item deleted successfully"})
+}
+
+func EditItemByID(c *gin.Context, db *gorm.DB) {
+    id := c.Param("id")
+
+    var requestBody ListingRequestBody
+
+    if err := c.BindJSON(&requestBody); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
+        return
+    }
+
+    if !authorizeUser(c, requestBody.User) {
+        return
+    }
+
+    var item models.ItemListing
+    if result := db.First(&item, id); result.Error != nil {
+        c.JSON(http.StatusNotFound, gin.H{"error": "No item found with the given ID"})
+        return
+    }
+
+    if item.SellerUsername != requestBody.User.Username {
         c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized to edit this item"})
         return
     }
 
-    // Parse the update payload
-    var updates map[string]interface{}
-    if err := c.ShouldBindJSON(&updates); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid update payload"})
-        return
-    }
-
-    // Perform the update
-    result := db.Model(&item).Updates(updates)
+    result := db.Model(&item).Updates(requestBody.ItemListing)
     if result.Error != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update item listing"})
         return
