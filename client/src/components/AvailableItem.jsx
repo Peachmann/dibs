@@ -1,5 +1,19 @@
 import '../styles.css';
-import { Card, IconButton, CardActions, CardContent, CardMedia, Container, Button, Typography, Grid, CardHeader, Box, styled, alpha } from '@mui/material';
+import {
+  Card,
+  IconButton,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Container,
+  Button,
+  Typography,
+  Grid,
+  CardHeader,
+  Box,
+  styled,
+  alpha
+} from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useState } from 'react';
 
@@ -23,27 +37,16 @@ export const AvailableItem = ({ item }) => {
   );
 };
 
-const ItemHeaderContainer = styled(Container)(({ theme }) => ({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  width: '100%',
-  // backgroundColor: alpha(theme.palette.primary.main, 0.54),
-  color: 'white',
-  padding: '10px',
-  display: 'inline-flex',
-}));
-
 const PriceGrid = styled(Grid)(({ theme }) => ({
-    background: alpha(theme.palette.primary.main, 0.5),
-    border: '1px solid #E0E0E0',
-    borderRadius: theme.shape.borderRadius,
-    justifyContent: 'center',
-    display: 'flex',
+  background: alpha(theme.palette.primary.main, 0.5),
+  border: '1px solid #E0E0E0',
+  borderRadius: theme.shape.borderRadius,
+  justifyContent: 'center',
+  display: 'flex'
 }));
 
 const PriceTypography = styled(Typography)(({ theme }) => ({
-  color: 'white',
+  color: 'white'
 }));
 
 const FavoriteButton = () => {
@@ -56,13 +59,15 @@ const FavoriteButton = () => {
   };
 
   const FavButton = styled(IconButton)(({ theme }) => ({
-    color: isFavorite ?  theme.palette.secondary.main : theme.palette.background.paper,
+    color: isFavorite
+      ? theme.palette.secondary.main
+      : theme.palette.background.paper,
     border: '1px solid ' + theme.palette.primary.main,
     borderRadius: '50%',
     padding: theme.spacing(1),
     '&:hover': {
-      backgroundColor: theme.palette.primary.main,
-    },
+      backgroundColor: theme.palette.primary.main
+    }
   }));
 
   return (
@@ -72,35 +77,70 @@ const FavoriteButton = () => {
   );
 };
 
-export const CardWithOverlay = ({ item }) => {
+export const DibsItem = ({ minHg }) => {
   return (
-    <Card variant="outlined" sx={{ maxWidth: 345, margin: '0 auto', position: 'relative' }}>
-      <Box sx={{ position: 'relative' }}>
+    <Box
+      style={{
+        height: '100%',
+        minHeight: minHg + 'px'
+      }}
+    >
+      <Card
+        variant="outlined"
+        sx={{
+          position: 'relative',
+          maxWidth: 350,
+          minHeight: 300,
+          margin: '0 auto',
+          height: '100%'
+        }}
+      >
         <CardMedia
+          sx={{
+            position: 'absolute',
+            height: '100%',
+            width: '100%',
+            top: 0,
+            right: 0
+          }}
           component="img"
-          height="200"
           image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
         />
-        <ItemHeaderContainer>
-          <Grid container alignItems="center">
-          <PriceGrid item xs={6}>
-            <PriceTypography variant="h6">
-              {item.price} € - 💵 💳
-            </PriceTypography>
-          </PriceGrid>
-          <Grid item xs={6} container justifyContent="flex-end">
-            <FavoriteButton variant="contained"/>
-          </Grid>
-         </Grid>
-        </ItemHeaderContainer>
-      </Box>
-      <Typography variant="h6">
-        {item.title}
-      </Typography>
-      <Typography sx={{ fontSize: '12px' }}>
-        {item.price}
-      </Typography>
-    </Card>
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <CardContent
+            sx={{ position: 'relative', backgroundColor: 'transparent' }}
+          >
+            <Grid container alignItems="center">
+              <PriceGrid item xs={6}>
+                <PriceTypography variant="h6">100 € - 💵 💳</PriceTypography>
+              </PriceGrid>
+              <Grid item xs={6} container justifyContent="flex-end">
+                <FavoriteButton variant="contained" />
+              </Grid>
+            </Grid>
+          </CardContent>
+
+          <CardActions
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignContent: 'flex-start',
+              position: 'relative',
+              marginTop: 'auto',
+              backgroundColor: 'rgba(124,145,197,0.5)'
+            }}
+          >
+            <Typography variant="h5" sx={{ color: 'white' }}>
+              Title
+            </Typography>
+            <Typography sx={{ fontSize: '12px', color: 'white' }}>
+              Descriptionfessssssssssssssssssssssssssssssssss
+            </Typography>
+          </CardActions>
+        </Box>
+      </Card>
+    </Box>
   );
 };
 

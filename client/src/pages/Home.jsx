@@ -1,8 +1,7 @@
 import Layout from '../components/Layout';
 import { useState, useEffect } from 'react';
 import * as itemService from '../services/itemService';
-import { AvailableItem, CardWithOverlay } from '../components/AvailableItem';
-//import Grid from '@mui/material/Unstable_Grid2';
+import { DibsItem } from '../components/AvailableItem';
 import Grid from '@mui/material/Grid';
 
 import { Box } from '@mui/material';
@@ -23,26 +22,43 @@ export const Home = () => {
     fetchItems();
   }, []);
 
-  useEffect(() => {
-    console.log(items);
-  }, [items]);
+  if (items[0] === undefined) return null;
 
   return (
     <>
       <button onClick={itemService.createItem}>Send POST Request</button>
       <Layout>
-        <Box sx={{ flexGrow: 1 }}>
+        <Box display="flex" justifyContent="center" alignItems="center">
           <Grid
             container
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
+            direction="row"
+            spacing={2}
+            sx={{ marginTop: '1%', maxWidth: '66%' }}
           >
-            {items.map((item) => (
-              <Grid item xs={2} sm={4} md={4} key={item.ID}>
-                {/* <AvailableItem item={item}></AvailableItem> */}
-                <CardWithOverlay item={item}></CardWithOverlay>
+            <Grid item container direction="column" xs spacing={1}>
+              <Grid item xs>
+                <DibsItem minHg={200}></DibsItem>
               </Grid>
-            ))}
+              <Grid item xs>
+                <DibsItem minHg={350}></DibsItem>
+              </Grid>
+            </Grid>
+            <Grid item container direction="column" xs spacing={1}>
+              <Grid item xs>
+                <DibsItem minHg={350}></DibsItem>
+              </Grid>
+              <Grid item xs>
+                <DibsItem minHg={200}></DibsItem>
+              </Grid>
+            </Grid>
+            <Grid item container direction="column" xs spacing={1}>
+              <Grid item xs>
+                <DibsItem minHg={200}></DibsItem>
+              </Grid>
+              <Grid item xs>
+                <DibsItem minHg={350}></DibsItem>
+              </Grid>
+            </Grid>
           </Grid>
         </Box>
       </Layout>
