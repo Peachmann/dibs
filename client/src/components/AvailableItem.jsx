@@ -77,20 +77,13 @@ const FavoriteButton = () => {
   );
 };
 
-export const DibsItem = ({ minHg }) => {
+export const DibsItem = ({ hg, minHg }) => {
   return (
-    <Box
-      style={{
-        height: '100%',
-        minHeight: minHg + 'px'
-      }}
-    >
+    <Box sx={{ height: hg }}>
       <Card
         variant="outlined"
         sx={{
           position: 'relative',
-          maxWidth: 350,
-          minHeight: 300,
           margin: '0 auto',
           height: '100%'
         }}

@@ -2,9 +2,42 @@ import Layout from '../components/Layout';
 import { useState, useEffect } from 'react';
 import * as itemService from '../services/itemService';
 import { DibsItem } from '../components/AvailableItem';
-import Grid from '@mui/material/Grid';
+import Masonry from '@mui/lab/Masonry';
 
 import { Box } from '@mui/material';
+
+const MainLayout = () => {
+  const [items, setItems] = useState([]);
+  const heights = [200, 350];
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const data = await itemService.getItems();
+        setItems(data);
+      } catch (error) {
+        console.error('Failed to fetch items', error);
+      }
+    };
+
+    fetchItems();
+  }, []);
+
+  if (items[0] === undefined) return null;
+
+  return (
+    <>
+      <Masonry columns={3} spacing={5} sx={{ width: '66%', paddingTop: '1%' }}>
+        <DibsItem hg={250} />
+        <DibsItem hg={450} />
+        <DibsItem hg={250} />
+        <DibsItem hg={450} />
+        <DibsItem hg={250} />
+        <DibsItem hg={450} />
+      </Masonry>
+    </>
+  );
+};
 
 export const Home = () => {
   const [items, setItems] = useState([]);
@@ -28,38 +61,8 @@ export const Home = () => {
     <>
       <button onClick={itemService.createItem}>Send POST Request</button>
       <Layout>
-        <Box display="flex" justifyContent="center" alignItems="center">
-          <Grid
-            container
-            direction="row"
-            spacing={2}
-            sx={{ marginTop: '1%', maxWidth: '66%' }}
-          >
-            <Grid item container direction="column" xs spacing={1}>
-              <Grid item xs>
-                <DibsItem minHg={200}></DibsItem>
-              </Grid>
-              <Grid item xs>
-                <DibsItem minHg={350}></DibsItem>
-              </Grid>
-            </Grid>
-            <Grid item container direction="column" xs spacing={1}>
-              <Grid item xs>
-                <DibsItem minHg={350}></DibsItem>
-              </Grid>
-              <Grid item xs>
-                <DibsItem minHg={200}></DibsItem>
-              </Grid>
-            </Grid>
-            <Grid item container direction="column" xs spacing={1}>
-              <Grid item xs>
-                <DibsItem minHg={200}></DibsItem>
-              </Grid>
-              <Grid item xs>
-                <DibsItem minHg={350}></DibsItem>
-              </Grid>
-            </Grid>
-          </Grid>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <MainLayout />
         </Box>
       </Layout>
     </>
