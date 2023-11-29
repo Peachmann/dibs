@@ -3,23 +3,23 @@ import { createTheme } from '@mui/material/styles';
 const DibsTheme = createTheme({
   palette: {
     primary: {
-      main: '#2196F3', // Blue
+      main: '#DFB685' // Blue
     },
     secondary: {
-      main: '#FF9800', // Orange
+      main: '#988671' // Orange
     },
     background: {
       default: '#F5F5F5', // Light Gray
-      paper: '#FFFFFF', // White
+      paper: '#FFFFFF' // White
     },
     text: {
       primary: '#333333', // Dark Gray
-      secondary: '#666666', // Medium Gray
+      secondary: '#666666' // Medium Gray
     },
     default: {
-      main: '#FFFFFF', // White
-    },
-  },
+      main: '#FFFFFF' // White
+    }
+  }
 });
 
 export default DibsTheme;
