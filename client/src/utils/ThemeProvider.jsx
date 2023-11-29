@@ -10,7 +10,8 @@ const DibsTheme = createTheme({
     },
     background: {
       default: '#F5F5F5', // Light Gray
-      paper: '#FFFFFF' // White
+      paper: '#FFFFFF', // White
+      secondary: '#17213C'
     },
     text: {
       primary: '#333333', // Dark Gray

@@ -9,7 +9,14 @@ const Login = () => {
     loginHandler(response, setAuth);
   };
 
-  return <TelegramLoginButton dataOnauth={localHandler} botName="DibsAppBot" />;
+  return (
+    <>
+      <TelegramLoginButton
+        dataOnauth={localHandler}
+        botName={import.meta.env.VITE_TELEGRAM_BOT}
+      />
+    </>
+  );
 };
 
 export default Login;

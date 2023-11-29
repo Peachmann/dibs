@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useState } from 'react';
+import { FullScreenDialog } from './ItemDetails';
 
 export const AvailableItem = ({ item }) => {
   return (
@@ -77,9 +78,20 @@ const FavoriteButton = () => {
   );
 };
 
-export const DibsItem = ({ hg, minHg }) => {
+export const DibsItem = ({ hg, item }) => {
+  const [openDibsDialog, setOpenDibsDialog] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpenDibsDialog(true);
+  };
+
   return (
-    <Box sx={{ height: hg }}>
+    <Box sx={{ height: hg }} onDoubleClick={() => handleClickOpen(true)}>
+      <FullScreenDialog
+        open={openDibsDialog}
+        setOpen={setOpenDibsDialog}
+        item={item}
+      />
       <Card
         variant="outlined"
         sx={{
@@ -106,7 +118,9 @@ export const DibsItem = ({ hg, minHg }) => {
           >
             <Grid container alignItems="center">
               <PriceGrid item xs={6}>
-                <PriceTypography variant="h6">100 € - 💵 💳</PriceTypography>
+                <PriceTypography variant="h6">
+                  {item.price} € - 💵 💳
+                </PriceTypography>
               </PriceGrid>
               <Grid item xs={6} container justifyContent="flex-end">
                 <FavoriteButton variant="contained" />
@@ -125,10 +139,10 @@ export const DibsItem = ({ hg, minHg }) => {
             }}
           >
             <Typography variant="h5" sx={{ color: 'white' }}>
-              Title
+              {item.title}
             </Typography>
             <Typography sx={{ fontSize: '12px', color: 'white' }}>
-              Descriptionfessssssssssssssssssssssssssssssssss
+              {item.description}
             </Typography>
           </CardActions>
         </Box>

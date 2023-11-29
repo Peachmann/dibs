@@ -33,7 +33,14 @@ func createDatabaseUrl() string {
 func InitDB() (*gorm.DB, error) {
 	loadEnv()
 
-	dsn := createDatabaseUrl()
+	dsn := ""
+
+	if (os.Getenv("ENV") == "PROD") {
+		 dsn = os.Getenv("DATABASE_URL")
+	} else {
+		dsn = createDatabaseUrl()
+	}
+
 	var err error
 	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {

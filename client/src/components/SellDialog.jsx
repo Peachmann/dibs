@@ -126,9 +126,7 @@ export const SellDialog = ({ open, setOpen }) => {
           <Checkbox icon={<Savings />} checkedIcon={<Savings />} />
         </Box>
 
-        <Box
-          sx={{ flexGrow: '1', alignSelf: 'stretch', backgroundColor: 'red' }}
-        >
+        <Box sx={{ flexGrow: '1', alignSelf: 'stretch' }}>
           <ImageList cols={3} rowHeight={164}>
             <ImageListItem
               sx={{

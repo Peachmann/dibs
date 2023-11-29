@@ -25,7 +25,7 @@ export const createItem = async (itemData) => {
         picture: 'images/magic.jpg',
         pickup_point: 'Sleesia',
         not_sold: true,
-        is_dibsed: false,
+        is_dibsed: false
       },
       {
         headers: {
@@ -36,9 +36,9 @@ export const createItem = async (itemData) => {
           Username: 'Reinmar',
           'Photo-Url': 'images/reinmar.jpg',
           'Auth-Date': '12345123',
-          'Auth-Hash': '*',
-        },
-      },
+          'Auth-Hash': '*'
+        }
+      }
     );
     console.log(response.data);
 

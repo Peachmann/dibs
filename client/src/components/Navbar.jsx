@@ -12,15 +12,16 @@ import {
   Container,
   Menu,
   MenuItem,
-  Typography,
+  Typography
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
+import { SearchBar } from './Search';
 
 const AvatarButton = ({
   anchorElUser,
   handleOpenUserMenu,
-  handleCloseUserMenu,
+  handleCloseUserMenu
 }) => {
   const { setAuth, user } = useAuth();
 
@@ -38,12 +39,12 @@ const AvatarButton = ({
           anchorEl={anchorElUser}
           anchorOrigin={{
             vertical: 'top',
-            horizontal: 'right',
+            horizontal: 'right'
           }}
           keepMounted
           transformOrigin={{
             vertical: 'top',
-            horizontal: 'right',
+            horizontal: 'right'
           }}
           open={Boolean(anchorElUser)}
           onClose={handleCloseUserMenu}
@@ -93,7 +94,7 @@ const CustomNavbar = () => {
   };
 
   return (
-    <AppBar position="sticky">
+    <AppBar position="sticky" sx={{ backgroundColor: '#302a2f' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
@@ -106,8 +107,8 @@ const CustomNavbar = () => {
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              color: 'white',
+              textDecoration: 'none'
             }}
           >
             DIBS
@@ -120,7 +121,7 @@ const CustomNavbar = () => {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="inherit"
+              color="white"
             >
               <MenuIcon />
             </IconButton>
@@ -129,17 +130,17 @@ const CustomNavbar = () => {
               anchorEl={anchorElNav}
               anchorOrigin={{
                 vertical: 'bottom',
-                horizontal: 'left',
+                horizontal: 'left'
               }}
               keepMounted
               transformOrigin={{
                 vertical: 'top',
-                horizontal: 'left',
+                horizontal: 'left'
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: 'block', md: 'none' },
+                display: { xs: 'block', md: 'none' }
               }}
             >
               {pages.map((page) => (
@@ -162,11 +163,16 @@ const CustomNavbar = () => {
               fontWeight: 700,
               letterSpacing: '.3rem',
               color: 'inherit',
-              textDecoration: 'none',
+              textDecoration: 'none'
             }}
           >
             DIBS
           </Typography>
+
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            <SearchBar />
+          </Box>
+
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
@@ -179,15 +185,17 @@ const CustomNavbar = () => {
             ))}
           </Box>
 
-          {auth ? (
-            <AvatarButton
-              handleCloseUserMenu={handleCloseUserMenu}
-              handleOpenUserMenu={handleOpenUserMenu}
-              anchorElUser={anchorElUser}
-            />
-          ) : (
-            <Login />
-          )}
+          <Box>
+            {auth ? (
+              <AvatarButton
+                handleCloseUserMenu={handleCloseUserMenu}
+                handleOpenUserMenu={handleOpenUserMenu}
+                anchorElUser={anchorElUser}
+              />
+            ) : (
+              <Login />
+            )}
+          </Box>
         </Toolbar>
       </Container>
     </AppBar>

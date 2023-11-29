@@ -25,10 +25,13 @@ func Start() {
 
 	database.InitDB()
 
-	// Start listening and serving requests - dev only
-	listener, err := ngrokListener(context.Background())
-	if err != nil {
-		log.Fatal(err)
+	if os.Getenv("ENV") == "PROD" {
+		router.Run()
+	} else {
+		listener, err := ngrokListener(context.Background())
+		if err != nil {
+			log.Fatal(err)
+		}
+		router.RunListener(listener)
 	}
-	router.RunListener(listener)
 }
