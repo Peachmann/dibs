@@ -109,7 +109,8 @@ export const DibsItem = ({ hg, item }) => {
             right: 0
           }}
           component="img"
-          image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
+          // image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
+          image={item.Pictures[0]}
         />
 
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>

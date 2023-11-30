@@ -1,16 +1,19 @@
 import { forwardRef, useState } from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import ListItemText from '@mui/material/ListItemText';
-import ListItem from '@mui/material/ListItem';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import CloseIcon from '@mui/icons-material/Close';
-import Slide from '@mui/material/Slide';
+import {
+  Grid,
+  Box,
+  Button,
+  Dialog,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  CloseIcon,
+  Slide
+} from '@mui/material';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { Carousel } from 'react-responsive-carousel';
+import { DibsAlert } from './DibsAlert';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -21,6 +24,12 @@ export const FullScreenDialog = ({ open, setOpen, item }) => {
     setOpen(false);
   };
 
+  const [openDibsAlertDialog, setOpenDibsAlertDialog] = useState(false);
+
+  const handleDibs = () => {
+    setOpenDibsAlertDialog(true);
+  };
+
   return (
     <>
       <Dialog
@@ -29,6 +38,11 @@ export const FullScreenDialog = ({ open, setOpen, item }) => {
         onClose={handleClose}
         TransitionComponent={Transition}
       >
+        <DibsAlert
+          open={openDibsAlertDialog}
+          setOpen={setOpenDibsAlertDialog}
+          item={item}
+        />
         <AppBar sx={{ position: 'relative' }}>
           <Toolbar>
             <IconButton
@@ -44,6 +58,61 @@ export const FullScreenDialog = ({ open, setOpen, item }) => {
             </Typography>
           </Toolbar>
         </AppBar>
+
+        <Box
+          sx={{
+            backgroundColor: '#f5e8d5',
+            width: '100%',
+            height: '100%',
+            display: 'flex'
+          }}
+        >
+          <Grid sx={{}} container spacing={2}>
+            <Grid
+              item
+              xs={6}
+              sx={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                display: 'flex'
+              }}
+            >
+              <Grid item xs={8}>
+                <Carousel showStatus={false} showIndicators={false}>
+                  {item.Pictures.map((pic) => (
+                    <div>
+                      <img src={pic} />
+                    </div>
+                  ))}
+                </Carousel>
+              </Grid>
+            </Grid>
+
+            <Grid
+              item
+              xs={6}
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <Grid item xs={8}>
+                <Typography variant="h4">{item.title}</Typography>
+
+                <Typography variant="h6">{item.pickup_point}</Typography>
+
+                <Typography variant="h6" component="p">
+                  {item.description}
+                </Typography>
+
+                <Button onClick={handleDibs} variant="contained" size="large">
+                  Dibs item!
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Box>
       </Dialog>
     </>
   );
