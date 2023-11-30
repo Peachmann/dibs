@@ -6,6 +6,7 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -26,6 +27,76 @@ type ListingRequestBody struct {
 type DibsRequestBody struct {
     User        models.User        `json:"user"`
     Dibs		models.Dibs		   `json:"dibs"`
+}
+
+func ParseUser(data string) (models.User, error) {
+    var user models.User
+    err := json.Unmarshal([]byte(data), &user)
+    return user, err
+}
+
+func ParseItemListing(data string) (models.ItemListing, error) {
+    var itemListing models.ItemListing
+    err := json.Unmarshal([]byte(data), &itemListing)
+    return itemListing, err
+}
+
+func ProcessImageUploads(c *gin.Context, itemListingID uint) ([]string, error) {
+    var picturePaths []string
+    for i := 0; i < 5; i++ {
+        file, fileHeader, err := c.Request.FormFile(fmt.Sprintf("picture%d", i+1))
+        if err != nil {
+            continue
+        }
+
+        buffer := make([]byte, 512)
+        _, err = file.Read(buffer)
+        if err != nil {
+            return nil, err
+        }
+
+        file.Seek(0, 0)
+
+        contentType := http.DetectContentType(buffer)
+        if contentType != "image/jpeg" && contentType != "image/png" {
+            continue
+        }
+
+        filePath := fmt.Sprintf("uploads/%d_%d.jpg", itemListingID, i)
+        if err := c.SaveUploadedFile(fileHeader, filePath); err != nil {
+            return nil, err
+        }
+
+        picturePaths = append(picturePaths, filePath)
+    }
+    return picturePaths, nil
+}
+
+func ensureDir(dirName string) error {
+    err := os.MkdirAll(dirName, os.ModePerm)
+    if err != nil {
+        return err
+    }
+    return nil
+}
+
+// Custom setter for Pictures - marshals the slice into a JSON string
+func SetPictures(il *models.ItemListing, pictures []string) error {
+    data, err := json.Marshal(pictures)
+    if err != nil {
+        return err
+    }
+    il.PicturesData = string(data)
+    return nil
+}
+
+// Custom getter for Pictures - unmarshals the JSON string back into a slice
+func GetPictures(il *models.ItemListing) ([]string, error) {
+    var pictures []string
+    if err := json.Unmarshal([]byte(il.PicturesData), &pictures); err != nil {
+        return nil, err
+    }
+    return pictures, nil
 }
 
 func authorizeUser(c *gin.Context, user models.User) bool {

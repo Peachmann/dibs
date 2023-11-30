@@ -1,6 +1,8 @@
 package main
 
-import "dibs/internal/server"
+import (
+	"dibs/internal/server"
+)
 
 func main() {
 	server.Start()

@@ -26,15 +26,10 @@ func SetRouter() *gin.Engine {
 		"Content-Type",
 		"Authorization",
 		"ngrok-skip-browser-warning",
-		"User-Id",             // Custom header
-		"First-Name",          // Custom header
-		"Last-Name",           // Custom header
-		"Username",            // Custom header
-		"Photo-Url",           // Custom header
-		"Auth-Date",           // Custom header
-		"Auth-Hash",           // Custom header
 	}
 	router.Use(cors.New(config))
+
+	router.Static("/uploads", "./uploads")
 
 	api := router.Group("/api")
 	{

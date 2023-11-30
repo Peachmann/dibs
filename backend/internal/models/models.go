@@ -5,15 +5,16 @@ import (
 )
 
 type ItemListing struct {
-	gorm.Model
-	SellerUsername 	string      `json:"seller_username" binding:"required"`
-	Title       	string     	`json:"title" binding:"required"`
-	Description 	string     	`json:"description"`
-	Price       	float64    	`json:"price" binding:"required"`
-	Picture     	string     	`json:"picture"`
-	NotSold     	bool	 	`json:"not_sold"`
-	PickupPoint 	string     	`json:"pickup_point"`
-	IsDibsed 		bool	   	`json:"is_dibsed"`
+    gorm.Model
+    SellerUsername  string    `json:"seller_username" binding:"required"`
+    Title           string    `json:"title" binding:"required"`
+    Description     string    `json:"description"`
+    Price           float64   `json:"price" binding:"required"`
+	PicturesData    string    `gorm:"column:pictures"` // Store the data in DB
+    Pictures        []string  `gorm:"-"` // Ignore this field for DB operations
+    NotSold         bool      `json:"not_sold"`
+    PickupPoint     string    `json:"pickup_point"`
+    IsDibsed        bool      `json:"is_dibsed"`
 }
 
 type Dibs struct {

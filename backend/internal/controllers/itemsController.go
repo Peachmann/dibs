@@ -8,27 +8,69 @@ import (
 	"gorm.io/gorm"
 )
 
+
 func CreateItem(c *gin.Context, db *gorm.DB) {
-    var requestBody ListingRequestBody
-
-    if err := c.BindJSON(&requestBody); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Inva123lid request body"})
+    if err := c.Request.ParseMultipartForm(10 << 20); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Error parsing multipart form"})
         return
     }
 
-    if !authorizeUser(c, requestBody.User) {
+    user, err := ParseUser(c.Request.Form["user"][0])
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user data"})
         return
     }
 
-    newItem := requestBody.ItemListing
-    newItem.SellerUsername = requestBody.User.Username
+    itemListing, err := ParseItemListing(c.Request.Form["item_listing"][0])
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid item listing data"})
+        return
+    }
 
-    if result := db.Create(&newItem); result.Error != nil {
+    if err := c.ShouldBind(&user); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user data"})
+        return
+    }
+
+    if err := c.ShouldBind(&itemListing); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid item listing data"})
+        return
+    }
+
+    if !authorizeUser(c, user) {
+        return
+    }
+
+    itemListing.SellerUsername = user.Username
+
+    if err := ensureDir("uploads"); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create directory"})
+        return
+    }
+
+    if result := db.Create(&itemListing); result.Error != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create item listing"})
         return
     }
 
-    c.JSON(http.StatusCreated, newItem)
+    picturePaths, err := ProcessImageUploads(c, itemListing.ID)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to process image uploads"})
+        return
+    }
+
+    if err := SetPictures(&itemListing, picturePaths); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to set pictures"})
+        return
+    }
+    
+    if result := db.Save(&itemListing); result.Error != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update item listing with images"})
+        return
+    }
+    
+
+    c.JSON(http.StatusCreated, itemListing)
 }
 
 func ListItems(c *gin.Context, db *gorm.DB) {
@@ -37,6 +79,17 @@ func ListItems(c *gin.Context, db *gorm.DB) {
 		c.JSON(500, gin.H{"error": "Failed to fetch item listings"})
 		return
 	}
+
+	// Deserialize the pictures for each item listing
+	for i := range items {
+		pictures, err := GetPictures(&items[i])
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get pictures"})
+			return
+		}
+		items[i].Pictures = pictures
+	}
+
 	c.JSON(200, items)
 }
 
