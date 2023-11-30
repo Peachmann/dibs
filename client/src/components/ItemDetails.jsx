@@ -8,9 +8,9 @@ import {
   Toolbar,
   IconButton,
   Typography,
-  CloseIcon,
   Slide
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
 import { DibsAlert } from './DibsAlert';
