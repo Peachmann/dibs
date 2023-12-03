@@ -13,8 +13,9 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const DibsAlert = ({ open, setOpen, item }) => {
+export const DibsAlert = ({ open, setOpen, item, closeDialog }) => {
   const handleClose = () => {
+    closeDialog();
     setOpen(false);
   };
 

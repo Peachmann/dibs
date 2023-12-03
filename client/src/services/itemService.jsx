@@ -13,6 +13,47 @@ export const getItems = async () => {
   }
 };
 
+export const dibsItem = async (itemID, user) => {
+  user.auth_date = user.auth_date.toString();
+  try {
+    const response = await api.post(`${BASE_URL}/api/dibs/${itemID}`, {
+      user: user
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error dibsing item', error);
+    throw error;
+  }
+};
+
+export const undibsItem = async (itemID, user) => {
+  user.auth_date = user.auth_date.toString();
+  try {
+    const response = await api.delete(`${BASE_URL}/api/dibs/${itemID}`, {
+      data: {
+        user: user
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error undibsing item', error);
+    throw error;
+  }
+};
+
+export const getOwnDibs = async (itemID, user) => {
+  user.auth_date = user.auth_date.toString();
+  try {
+    const response = await api.get(
+      `${BASE_URL}/api/dibs/${itemID}/${user.username}`
+    );
+    return response.data.own_dibs;
+  } catch (error) {
+    console.error('Error undibsing item', error);
+    throw error;
+  }
+};
+
 export const createItem = async (itemData) => {
   try {
     const response = await api.post(

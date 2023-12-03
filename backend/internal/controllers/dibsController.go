@@ -107,3 +107,34 @@ func DeleteDibs(c *gin.Context, db *gorm.DB) {
 
     c.JSON(http.StatusOK, gin.H{"message": "Dibs deleted successfully"})
 }
+
+func GetDibs(c *gin.Context, db *gorm.DB) {
+    itemIDStr := c.Param("id")
+    itemID, err := strconv.Atoi(itemIDStr)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid item ID"})
+        return
+    }
+
+    user := c.Param("user")
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid username"})
+        return
+    }
+
+    var item models.ItemListing
+    if result := db.First(&item, itemID); result.Error != nil {
+        c.JSON(http.StatusNotFound, gin.H{"error": "No item found with the given ID"})
+        return
+    }
+
+    var dibs models.Dibs
+    result := db.Where("item_listing_id = ? AND buyer_username = ? AND deleted_at is null", itemID, user).First(&dibs);
+    if result.RowsAffected == 0 {
+        c.JSON(http.StatusOK, gin.H{"own_dibs": false})
+        return
+    } else {
+        c.JSON(http.StatusOK, gin.H{"own_dibs": true})
+        return
+    }
+}

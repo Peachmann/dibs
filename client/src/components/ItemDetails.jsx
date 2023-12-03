@@ -14,19 +14,30 @@ import CloseIcon from '@mui/icons-material/Close';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
 import { DibsAlert } from './DibsAlert';
+import { useAuth } from '../services/AuthContext';
+import { dibsItem } from '../services/itemService';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const FullScreenDialog = ({ open, setOpen, item, pictures }) => {
+export const FullScreenDialog = ({
+  open,
+  setOpen,
+  item,
+  pictures,
+  setDibsed
+}) => {
   const handleClose = () => {
     setOpen(false);
   };
 
   const [openDibsAlertDialog, setOpenDibsAlertDialog] = useState(false);
+  const { user } = useAuth();
 
-  const handleDibs = () => {
+  const handleDibs = async () => {
+    await dibsItem(item.ID, user);
+    setDibsed(true);
     setOpenDibsAlertDialog(true);
   };
 
@@ -43,7 +54,9 @@ export const FullScreenDialog = ({ open, setOpen, item, pictures }) => {
         <DibsAlert
           open={openDibsAlertDialog}
           setOpen={setOpenDibsAlertDialog}
+          closeDialog={handleClose}
           item={item}
+          setDibsed={setDibsed}
         />
         <AppBar sx={{ position: 'relative' }}>
           <Toolbar>

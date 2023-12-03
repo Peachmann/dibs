@@ -52,6 +52,9 @@ func SetRouter() *gin.Engine {
 		api.DELETE("/dibs/:id", func(c *gin.Context) {
 			controllers.DeleteDibs(c, database.GetDB())
 		})
+		api.GET("/dibs/:id/:user", func(c *gin.Context) {
+			controllers.GetDibs(c, database.GetDB())
+		})
 	}
 
 	router.NoRoute(func(ctx *gin.Context) { ctx.JSON(http.StatusNotFound, gin.H{}) })

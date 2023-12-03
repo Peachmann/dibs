@@ -5,7 +5,6 @@ import {
   CardActions,
   CardContent,
   CardMedia,
-  Container,
   Button,
   Typography,
   Grid,
@@ -20,6 +19,9 @@ import { FullScreenDialog } from './ItemDetails';
 import api from '../utils/api';
 import { useEffect } from 'react';
 import { Buffer } from 'buffer';
+import { useAuth } from '../services/AuthContext';
+import { undibsItem } from '../services/itemService';
+import { getOwnDibs } from '../services/itemService';
 
 export const AvailableItem = ({ item }) => {
   return (
@@ -84,10 +86,31 @@ const FavoriteButton = () => {
 export const DibsItem = ({ hg, item }) => {
   const [openDibsDialog, setOpenDibsDialog] = useState(false);
   const [pictures, setPictures] = useState(null);
+  const [dibsed, setDibsed] = useState(item.is_dibsed);
+  const [ownDibs, setOwnDibs] = useState(false);
+  const { user } = useAuth();
 
   const handleClickOpen = () => {
     setOpenDibsDialog(true);
   };
+
+  const handleUndibs = async () => {
+    console.log(user);
+    await undibsItem(item.ID, user);
+    setDibsed(false);
+  };
+
+  useEffect(() => {
+    const dibsCheck = async () => {
+      if (!dibsed) return;
+
+      // console.log('Checking dibs');
+      // console.log(user);
+      const response = await getOwnDibs(item.ID, user);
+      setOwnDibs(response);
+    };
+    dibsCheck();
+  }, [dibsed]);
 
   useEffect(() => {
     const getPictures = async () => {
@@ -115,12 +138,18 @@ export const DibsItem = ({ hg, item }) => {
   };
 
   return (
-    <Box sx={{ height: hg }} onDoubleClick={() => handleClickOpen(true)}>
+    <Box
+      sx={{ height: hg, cursor: dibsed ? 'default' : 'pointer' }}
+      onDoubleClick={() => {
+        if (!dibsed) handleClickOpen(true);
+      }}
+    >
       <FullScreenDialog
         open={openDibsDialog}
         setOpen={setOpenDibsDialog}
         item={item}
         pictures={pictures}
+        setDibsed={setDibsed}
       />
       <Card
         variant="outlined"
@@ -136,7 +165,8 @@ export const DibsItem = ({ hg, item }) => {
             height: '100%',
             width: '100%',
             top: 0,
-            right: 0
+            right: 0,
+            opacity: dibsed ? 0.5 : 1
           }}
           component="img"
           image={getPictures()}
@@ -144,7 +174,11 @@ export const DibsItem = ({ hg, item }) => {
 
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           <CardContent
-            sx={{ position: 'relative', backgroundColor: 'transparent' }}
+            sx={{
+              position: 'relative',
+              backgroundColor: 'transparent',
+              opacity: dibsed ? 0.5 : 1
+            }}
           >
             <Grid container alignItems="center">
               <PriceGrid item xs={6}>
@@ -168,12 +202,34 @@ export const DibsItem = ({ hg, item }) => {
               backgroundColor: 'rgba(124,145,197,0.5)'
             }}
           >
-            <Typography variant="h5" sx={{ color: 'white' }}>
-              {item.title}
-            </Typography>
-            <Typography sx={{ fontSize: '12px', color: 'white' }}>
-              {item.description}
-            </Typography>
+            {dibsed ? (
+              <>
+                {ownDibs ? (
+                  <Button
+                    sx={{ marginBottom: '2%' }}
+                    variant="contained"
+                    onClick={handleUndibs}
+                  >
+                    Undibs
+                  </Button>
+                ) : (
+                  <> </>
+                )}
+
+                <Typography variant="h5" sx={{ color: 'white' }}>
+                  {item.title} is dibsed already!
+                </Typography>
+              </>
+            ) : (
+              <>
+                <Typography variant="h5" sx={{ color: 'white' }}>
+                  {item.title}
+                </Typography>
+                <Typography sx={{ fontSize: '12px', color: 'white' }}>
+                  {item.description}
+                </Typography>
+              </>
+            )}
           </CardActions>
         </Box>
       </Card>
