@@ -29,7 +29,7 @@ func SetRouter() *gin.Engine {
 	}
 	router.Use(cors.New(config))
 
-	router.Static("/uploads", "./uploads")
+	router.Static("/images", "/images")
 
 	api := router.Group("/api")
 	{

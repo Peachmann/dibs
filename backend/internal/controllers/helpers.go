@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"dibs/internal/models"
+	"time"
 
 	"crypto/hmac"
 	"crypto/sha256"
@@ -62,12 +63,15 @@ func ProcessImageUploads(c *gin.Context, itemListingID uint) ([]string, error) {
             continue
         }
 
-        filePath := fmt.Sprintf("uploads/%d_%d.jpg", itemListingID, i)
+        sec := time.Now().Unix()
+        filePath := fmt.Sprintf("/images/%d_%d_%d.jpg", itemListingID, i, sec)
         if err := c.SaveUploadedFile(fileHeader, filePath); err != nil {
             return nil, err
         }
 
         picturePaths = append(picturePaths, filePath)
+        fmt.Println("Picture paths:")
+        fmt.Println(picturePaths)
     }
     return picturePaths, nil
 }

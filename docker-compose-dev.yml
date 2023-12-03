@@ -8,6 +8,7 @@ services:
     # entrypoint: ["air -c .air.toml"]
     volumes:
       - ./backend/:/app
+      - dibs_volume:/app/images
     ports:
       - 8080:8080
     depends_on:
@@ -15,6 +16,21 @@ services:
       - flyway
     env_file:
       - ./backend/configs/database.env
+
+  dibs-client:
+    restart: always
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - '80:80'
+    depends_on:
+      - database
+      - dibs-backend
+    volumes:
+      - dibs_volume:/app/images
+      - ./client:/app
+    
 
   database:
     container_name: dibs-database
@@ -32,3 +48,6 @@ services:
     command: -connectRetries=60 -baselineOnMigrate=true migrate
     env_file:
       - ./backend/configs/database.env
+
+volumes:
+  dibs_volume:

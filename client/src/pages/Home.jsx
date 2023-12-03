@@ -31,9 +31,6 @@ const MainLayout = () => {
         {items.map((item, index) => (
           <DibsItem key={index} item={item} hg={heights[index % 3]} />
         ))}
-        {items.map((item, index) => (
-          <DibsItem key={index} item={item} hg={heights[index % 3]} />
-        ))}
       </Masonry>
     </>
   );

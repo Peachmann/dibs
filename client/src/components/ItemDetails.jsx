@@ -19,7 +19,7 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const FullScreenDialog = ({ open, setOpen, item }) => {
+export const FullScreenDialog = ({ open, setOpen, item, pictures }) => {
   const handleClose = () => {
     setOpen(false);
   };
@@ -29,6 +29,8 @@ export const FullScreenDialog = ({ open, setOpen, item }) => {
   const handleDibs = () => {
     setOpenDibsAlertDialog(true);
   };
+
+  if (pictures === null) return null;
 
   return (
     <>
@@ -79,7 +81,7 @@ export const FullScreenDialog = ({ open, setOpen, item }) => {
             >
               <Grid item xs={8}>
                 <Carousel showStatus={false} showIndicators={false}>
-                  {item.Pictures.map((pic) => (
+                  {pictures.map((pic) => (
                     <div>
                       <img src={pic} />
                     </div>

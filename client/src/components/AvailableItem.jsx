@@ -17,6 +17,9 @@ import {
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useState } from 'react';
 import { FullScreenDialog } from './ItemDetails';
+import api from '../utils/api';
+import { useEffect } from 'react';
+import { Buffer } from 'buffer';
 
 export const AvailableItem = ({ item }) => {
   return (
@@ -80,9 +83,35 @@ const FavoriteButton = () => {
 
 export const DibsItem = ({ hg, item }) => {
   const [openDibsDialog, setOpenDibsDialog] = useState(false);
+  const [pictures, setPictures] = useState(null);
 
   const handleClickOpen = () => {
     setOpenDibsDialog(true);
+  };
+
+  useEffect(() => {
+    const getPictures = async () => {
+      const images = [];
+      for (let i = 0; i < item.Pictures.length; i++) {
+        const img = await api
+          .get(item.Pictures[i], {
+            responseType: 'arraybuffer'
+          })
+          .then((res) => Buffer.from(res.data, 'binary').toString('base64'));
+        images.push('data:image/png;base64, ' + img);
+      }
+
+      setPictures(images);
+    };
+    getPictures();
+  }, []);
+
+  const getPictures = () => {
+    if (pictures === null) {
+      return '';
+    }
+
+    return pictures[0];
   };
 
   return (
@@ -91,6 +120,7 @@ export const DibsItem = ({ hg, item }) => {
         open={openDibsDialog}
         setOpen={setOpenDibsDialog}
         item={item}
+        pictures={pictures}
       />
       <Card
         variant="outlined"
@@ -109,8 +139,7 @@ export const DibsItem = ({ hg, item }) => {
             right: 0
           }}
           component="img"
-          // image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
-          image={item.Pictures[0]}
+          image={getPictures()}
         />
 
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>

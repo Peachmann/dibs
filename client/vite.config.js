@@ -6,7 +6,13 @@ export default defineConfig(({ command }) => {
     return {
       plugins: [react()],
       server: {
-        host: 'dibs-app-dev.com',
+        // host: 'dibs-app-dev.com',
+        // port: 80
+        watch: {
+          usePolling: true
+        },
+        host: true,
+        strictPort: true,
         port: 80
       }
     };
