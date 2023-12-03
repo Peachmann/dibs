@@ -3,11 +3,13 @@ import { useState, useEffect } from 'react';
 import * as itemService from '../services/itemService';
 import { DibsItem } from '../components/AvailableItem';
 import Masonry from '@mui/lab/Masonry';
+import { SellButton } from '../components/SellButton';
 
 import { Box } from '@mui/material';
 
 const MainLayout = () => {
   const [items, setItems] = useState([]);
+  const [change, setChange] = useState(false);
   const heights = [325, 450, 250];
 
   useEffect(() => {
@@ -21,7 +23,7 @@ const MainLayout = () => {
     };
 
     fetchItems();
-  }, []);
+  }, [change]);
 
   if (items[0] === undefined) return null;
 
@@ -32,6 +34,7 @@ const MainLayout = () => {
           <DibsItem key={index} item={item} hg={heights[index % 3]} />
         ))}
       </Masonry>
+      <SellButton change={change} setChange={setChange} />
     </>
   );
 };

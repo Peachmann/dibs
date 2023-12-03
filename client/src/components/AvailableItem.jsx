@@ -141,7 +141,7 @@ export const DibsItem = ({ hg, item }) => {
     <Box
       sx={{ height: hg, cursor: dibsed ? 'default' : 'pointer' }}
       onDoubleClick={() => {
-        if (!dibsed) handleClickOpen(true);
+        if (!dibsed && user !== null) handleClickOpen(true);
       }}
     >
       <FullScreenDialog

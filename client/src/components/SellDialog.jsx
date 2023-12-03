@@ -1,20 +1,23 @@
 import { forwardRef, useState } from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import { NumericFormat } from 'react-number-format';
 import {
+  TextField,
+  Button,
   Dialog,
   Box,
   Checkbox,
   styled,
   alpha,
-  Typography,
+  FormControl,
+  FormGroup,
   ImageList,
   ImageListItem,
   DialogActions,
   Fab
 } from '@mui/material';
 import { CreditCard, CreditCardOff, Savings, Add } from '@mui/icons-material';
+import { createItem } from '../services/itemService';
+import { useAuth } from '../services/AuthContext';
 
 const SellGrid = styled(Box)(({ theme }) => ({
   background: alpha(theme.palette.primary.main, 0.5),
@@ -55,18 +58,21 @@ const NumericFormatCustom = forwardRef(function NumericFormatCustom(
           }
         });
       }}
-      thousandSeparator
       valueIsNumericString
-      prefix="€"
     />
   );
 });
 
 const MAX_COUNT = 5;
 
-export const SellDialog = ({ open, setOpen }) => {
+export const SellDialog = ({ open, setOpen, setChange, change }) => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [fileLimit, setFileLimit] = useState(false);
+  const [price, setPrice] = useState(0);
+  const [name, setName] = useState('');
+  const [address, setAddress] = useState('');
+  const [description, setDescription] = useState('');
+  const { user } = useAuth();
 
   const handleUploadFiles = (files) => {
     const uploaded = [...uploadedFiles];
@@ -93,94 +99,138 @@ export const SellDialog = ({ open, setOpen }) => {
   };
 
   const handleClose = () => {
+    setUploadedFiles([]);
     setOpen(false);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const itemData = {
+      name: name,
+      address: address,
+      description: description,
+      price: price,
+      images: uploadedFiles
+    };
+
+    await createItem(itemData, user);
+    setOpen(false);
+    setChange(!change);
+    setUploadedFiles([]);
   };
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <SellGrid
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        height="100%"
-      >
-        <Box
-          sx={{
-            alignSelf: 'flex-start',
-            marginTop: '5%',
-            marginLeft: '5%',
-            display: 'flex'
-          }}
-        >
-          <TextField
-            label="Price"
-            name="price"
-            id="price"
-            InputProps={{
-              inputComponent: NumericFormatCustom
-            }}
-            variant="outlined"
-            required
-          />
-          <Checkbox icon={<CreditCardOff />} checkedIcon={<CreditCard />} />
-          <Checkbox icon={<Savings />} checkedIcon={<Savings />} />
-        </Box>
-
-        <Box sx={{ flexGrow: '1', alignSelf: 'stretch' }}>
-          <ImageList cols={3} rowHeight={164}>
-            <ImageListItem
+      <FormControl>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
+          <SellGrid
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            height="100%"
+          >
+            <Box
               sx={{
-                top: '30%',
-                justifyItems: 'center',
-                alignItems: 'center'
+                alignSelf: 'flex-start',
+                marginTop: '5%',
+                marginLeft: '5%',
+                display: 'flex'
               }}
             >
-              <input
-                accept="image/*"
-                style={{ display: 'none' }}
-                id="image-upload"
-                multiple
-                type="file"
-                onChange={handleFileEvent}
-                disabled={fileLimit}
+              <TextField
+                label="Price"
+                name="price"
+                id="price"
+                InputProps={{
+                  inputComponent: NumericFormatCustom
+                }}
+                variant="outlined"
+                onInput={(e) => setPrice(e.target.value)}
+                required
               />
-              <label htmlFor="image-upload">
-                <Fab
-                  type="file"
-                  color="primary"
-                  aria-label="add"
-                  component="span"
+              <Checkbox
+                checked={true}
+                icon={<CreditCardOff />}
+                checkedIcon={<CreditCard />}
+              />
+              <Checkbox icon={<Savings />} checkedIcon={<Savings />} />
+            </Box>
+
+            <Box sx={{ flexGrow: '1', alignSelf: 'stretch' }}>
+              <ImageList cols={3} rowHeight={164}>
+                <ImageListItem
+                  sx={{
+                    top: '30%',
+                    justifyItems: 'center',
+                    alignItems: 'center'
+                  }}
                 >
-                  <Add />
-                </Fab>
-              </label>
-            </ImageListItem>
+                  <input
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    id="image-upload"
+                    multiple
+                    type="file"
+                    onChange={handleFileEvent}
+                    disabled={fileLimit}
+                  />
+                  <label htmlFor="image-upload">
+                    <Fab
+                      type="file"
+                      color="primary"
+                      aria-label="add"
+                      component="span"
+                    >
+                      <Add />
+                    </Fab>
+                  </label>
+                </ImageListItem>
 
-            {uploadedFiles.map((file) => (
-              <ImageListItem sx={{ border: '1px solid white' }} key={file.url}>
-                <img src={file.url} alt={file.name} loading="lazy" />
-              </ImageListItem>
-            ))}
-          </ImageList>
-        </Box>
+                {uploadedFiles.map((file) => (
+                  <ImageListItem
+                    sx={{ border: '1px solid white' }}
+                    key={file.url}
+                  >
+                    <img src={file.url} alt={file.name} loading="lazy" />
+                  </ImageListItem>
+                ))}
+              </ImageList>
+            </Box>
 
-        <DetailsBox>
-          <TextField label="Item name" name="name" id="name" required />
-          <TextField label="Address" name="address" id="address" required />
-          <TextField label="Description" name="description" id="description" />
-        </DetailsBox>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Sell Item!</Button>
-        </DialogActions>
-      </SellGrid>
+            <DetailsBox>
+              <TextField
+                label="Item name"
+                name="name"
+                id="name"
+                required
+                onInput={(e) => setName(e.target.value)}
+              />
+              <TextField
+                label="Address"
+                name="address"
+                id="address"
+                required
+                onInput={(e) => setAddress(e.target.value)}
+              />
+              <TextField
+                label="Description"
+                name="description"
+                id="description"
+                onInput={(e) => setDescription(e.target.value)}
+              />
+            </DetailsBox>
+            <DialogActions>
+              <Button variant="contained" onClick={handleClose}>
+                Cancel
+              </Button>
+              <Button type="submit" variant="contained">
+                Sell Item!
+              </Button>
+            </DialogActions>
+          </SellGrid>
+        </form>
+      </FormControl>
     </Dialog>
   );
 };
-
-{
-  /* <DialogActions>
-<Button onClick={handleClose}>Cancel</Button>
-<Button onClick={handleClose}>Sell Item!</Button>
-</DialogActions> */
-}

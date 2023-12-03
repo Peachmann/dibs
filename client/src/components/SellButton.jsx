@@ -10,7 +10,7 @@ const actionSize = {
   backgroundColor: 'lightblue'
 };
 
-export const SellButton = () => {
+export const SellButton = ({ setChange, change }) => {
   const [openSellingDialog, setOpenSellingDialog] = useState(false);
 
   const handleClickOpen = () => {
@@ -51,7 +51,12 @@ export const SellButton = () => {
           />
         </SpeedDial>
 
-        <SellDialog open={openSellingDialog} setOpen={setOpenSellingDialog} />
+        <SellDialog
+          open={openSellingDialog}
+          setOpen={setOpenSellingDialog}
+          change={change}
+          setChange={setChange}
+        />
       </Box>
     </>
   );

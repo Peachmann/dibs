@@ -54,36 +54,29 @@ export const getOwnDibs = async (itemID, user) => {
   }
 };
 
-export const createItem = async (itemData) => {
+export const createItem = async (itemData, user) => {
   try {
-    const response = await api.post(
-      `${BASE_URL}/api/items`,
-      {
-        seller_username: 'Reinmar',
-        title: 'book',
-        description: 'Black magic II.',
-        price: 45.0,
-        picture: 'images/magic.jpg',
-        pickup_point: 'Sleesia',
-        not_sold: true,
-        is_dibsed: false
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'User-Id': '10001',
-          'First-Name': 'Reynevan',
-          'Last-Name': 'von Bielau',
-          Username: 'Reinmar',
-          'Photo-Url': 'images/reinmar.jpg',
-          'Auth-Date': '12345123',
-          'Auth-Hash': '*'
-        }
-      }
-    );
-    console.log(response.data);
+    const item_listing = {
+      title: itemData.name,
+      pickup_point: itemData.address,
+      description: itemData.description,
+      price: Number(itemData.price),
+      not_sold: true,
+      is_dibsed: false,
+      seller_username: user.username
+    };
 
-    return response.data;
+    const form = new FormData();
+
+    user.auth_date = user.auth_date.toString();
+    form.append('item_listing', JSON.stringify(item_listing));
+    form.append('user', JSON.stringify(user));
+
+    for (let i = 1; i <= itemData.images.length; i++) {
+      form.append('picture' + i, itemData.images[i - 1]);
+    }
+
+    await api.postForm(`${BASE_URL}/api/items`, form);
   } catch (error) {
     console.error('Error creating item', error);
     throw error;
