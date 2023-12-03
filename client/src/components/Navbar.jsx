@@ -25,6 +25,8 @@ const AvatarButton = ({
 }) => {
   const { setAuth, user } = useAuth();
 
+  if (!user) return <></>;
+
   return (
     <>
       <Box sx={{ flexGrow: 0 }}>

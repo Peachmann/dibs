@@ -3,7 +3,7 @@ import { useContext, useState, useEffect, createContext } from 'react';
 const AuthContext = createContext({
   auth: null,
   setAuth: () => {},
-  user: null,
+  user: null
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -15,7 +15,7 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkLoggedIn = async () => {
       const cuser = localStorage.getItem('user');
-      // cuser ? setAuth(true) : setAuth(false);
+      cuser ? setAuth(true) : setAuth(false);
       cuser ? setUser(JSON.parse(cuser)) : setUser(null);
     };
 

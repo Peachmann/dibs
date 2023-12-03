@@ -1,33 +1,27 @@
-import { SHA256, enc, HmacSHA256 } from "crypto-js";
+import { SHA256, enc, HmacSHA256 } from 'crypto-js';
 
 export const loginHandler = (response, setAuth) => {
   if (!validate(response)) {
-    console.log("Invalid login");
-    return "Invalid login";
+    return 'Invalid login';
   }
-	localStorage.setItem('user', JSON.stringify(response));
+  localStorage.setItem('user', JSON.stringify(response));
   setAuth(true);
-
-  console.log("Logged in");
-
 };
 
 export const logoutHandler = (setAuth) => {
-  //localStorage.removeItem('user');
+  localStorage.removeItem('user');
   setAuth(false);
-  console.log("Logged out");
 };
 
 const validate = async (data) => {
-
   const token = import.meta.env.VITE_TELEGRAM_TOKEN;
   const secretKey = SHA256(token).toString(enc.Hex);
 
   const data_check_string = Object.keys(data)
-    .filter((key) => key !== "hash")
+    .filter((key) => key !== 'hash')
     .map((key) => `${key}=${data[key]}`)
     .sort()
-    .join("\n");
+    .join('\n');
 
   const check_hash = HmacSHA256(data_check_string, secretKey).toString(enc.Hex);
 

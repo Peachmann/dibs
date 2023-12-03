@@ -1,7 +1,8 @@
 import { Box, SpeedDial, SpeedDialIcon, SpeedDialAction } from '@mui/material';
 import { useState } from 'react';
-import { SellSharp, FavoriteRounded } from '@mui/icons-material';
+import { SellSharp } from '@mui/icons-material';
 import { SellDialog } from './SellDialog';
+import { useAuth } from '../services/AuthContext';
 
 const actionSize = {
   width: 50,
@@ -15,6 +16,9 @@ export const SellButton = () => {
   const handleClickOpen = () => {
     setOpenSellingDialog(true);
   };
+
+  const { auth } = useAuth();
+  if (!auth) return <></>;
 
   return (
     <>
