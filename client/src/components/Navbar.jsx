@@ -15,8 +15,9 @@ import {
   Typography
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SearchBar } from './Search';
+import { FilterDialog } from './FilterDialog';
 
 const AvatarButton = ({
   anchorElUser,
@@ -79,6 +80,9 @@ const CustomNavbar = ({ items, filteredItems }) => {
   const { auth } = useAuth();
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const [filterDialogOpen, setFilterDialogOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [priceFilter, setPriceFilter] = useState([1, 300]);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -89,11 +93,24 @@ const CustomNavbar = ({ items, filteredItems }) => {
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+    setFilterDialogOpen(true);
   };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  useEffect(() => {
+    const searchResult = items[0].filter((item) =>
+      item.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const result = searchResult.filter(
+      (item) => item.price >= priceFilter[0] && item.price <= priceFilter[1]
+    );
+
+    filteredItems[1](result);
+  }, [searchTerm, priceFilter]);
 
   return (
     <AppBar position="sticky" sx={{ backgroundColor: '#302a2f' }}>
@@ -172,7 +189,7 @@ const CustomNavbar = ({ items, filteredItems }) => {
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            <SearchBar items={items} filteredItems={filteredItems} />
+            <SearchBar search={[searchTerm, setSearchTerm]} />
           </Box>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
@@ -181,8 +198,13 @@ const CustomNavbar = ({ items, filteredItems }) => {
               onClick={handleCloseNavMenu}
               sx={{ my: 2, color: 'white', display: 'block' }}
             >
-              Sort by
+              Filters
             </Button>
+            <FilterDialog
+              open={filterDialogOpen}
+              setOpen={setFilterDialogOpen}
+              priceFilter={[priceFilter, setPriceFilter]}
+            />
           </Box>
 
           <Box>

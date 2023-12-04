@@ -43,18 +43,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   }
 }));
 
-export const SearchBar = ({ items, filteredItems }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-
+export const SearchBar = ({ search }) => {
   const handleInputChange = (e) => {
     const input = e.target.value;
-    setSearchTerm(input);
-
-    const result = items[0].filter((item) =>
-      item.title.toLowerCase().includes(e.target.value.toLowerCase())
-    );
-
-    filteredItems[1](result);
+    search[1](input);
   };
 
   return (
@@ -66,7 +58,7 @@ export const SearchBar = ({ items, filteredItems }) => {
         placeholder="Search…"
         inputProps={{ 'aria-label': 'search' }}
         onChange={handleInputChange}
-        value={searchTerm}
+        value={search[0]}
         type="text"
       />
     </Search>

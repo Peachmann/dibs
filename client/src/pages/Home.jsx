@@ -13,6 +13,8 @@ import { Box } from '@mui/material';
 const MainLayout = ({ change, setChange, items }) => {
   const heights = [325, 450, 250];
 
+  if (items.length === 0) return <div>No items to show!</div>;
+
   return (
     <>
       <Masonry columns={3} spacing={5} sx={{ width: '66%', paddingTop: '1%' }}>
