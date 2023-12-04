@@ -85,7 +85,6 @@ const FavoriteButton = () => {
 
 export const DibsItem = ({ hg, item }) => {
   const [openDibsDialog, setOpenDibsDialog] = useState(false);
-  const [pictures, setPictures] = useState(null);
   const [dibsed, setDibsed] = useState(item.is_dibsed);
   const [ownDibs, setOwnDibs] = useState(false);
   const { user } = useAuth();
@@ -95,47 +94,19 @@ export const DibsItem = ({ hg, item }) => {
   };
 
   const handleUndibs = async () => {
-    console.log(user);
     await undibsItem(item.ID, user);
     setDibsed(false);
+    item.is_dibsed = false;
   };
 
   useEffect(() => {
     const dibsCheck = async () => {
       if (!dibsed) return;
-
-      // console.log('Checking dibs');
-      // console.log(user);
       const response = await getOwnDibs(item.ID, user);
       setOwnDibs(response);
     };
     dibsCheck();
   }, [dibsed]);
-
-  useEffect(() => {
-    const getPictures = async () => {
-      const images = [];
-      for (let i = 0; i < item.Pictures.length; i++) {
-        const img = await api
-          .get(item.Pictures[i], {
-            responseType: 'arraybuffer'
-          })
-          .then((res) => Buffer.from(res.data, 'binary').toString('base64'));
-        images.push('data:image/png;base64, ' + img);
-      }
-
-      setPictures(images);
-    };
-    getPictures();
-  }, []);
-
-  const getPictures = () => {
-    if (pictures === null) {
-      return '';
-    }
-
-    return pictures[0];
-  };
 
   return (
     <Box
@@ -148,7 +119,7 @@ export const DibsItem = ({ hg, item }) => {
         open={openDibsDialog}
         setOpen={setOpenDibsDialog}
         item={item}
-        pictures={pictures}
+        pictures={item.Pictures}
         setDibsed={setDibsed}
       />
       <Card
@@ -169,7 +140,7 @@ export const DibsItem = ({ hg, item }) => {
             opacity: dibsed ? 0.5 : 1
           }}
           component="img"
-          image={getPictures()}
+          image={item.Pictures[0]}
         />
 
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>

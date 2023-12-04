@@ -72,10 +72,10 @@ const AvatarButton = ({
   );
 };
 
-const pages = ['Sell', 'Filter', 'Search'];
+const pages = ['Filter'];
 const settings = ['Profile', 'My Items'];
 
-const CustomNavbar = () => {
+const CustomNavbar = ({ items, filteredItems }) => {
   const { auth } = useAuth();
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -172,19 +172,17 @@ const CustomNavbar = () => {
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            <SearchBar />
+            <SearchBar items={items} filteredItems={filteredItems} />
           </Box>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}
+            <Button
+              key="Sort"
+              onClick={handleCloseNavMenu}
+              sx={{ my: 2, color: 'white', display: 'block' }}
+            >
+              Sort by
+            </Button>
           </Box>
 
           <Box>

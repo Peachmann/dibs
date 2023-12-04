@@ -1,12 +1,7 @@
 import CustomNavbar from './Navbar';
 
 const Layout = ({ children }) => {
-  return (
-    <>
-      <CustomNavbar />
-      {children}
-    </>
-  );
+  return <>{children}</>;
 };
 
 export default Layout;

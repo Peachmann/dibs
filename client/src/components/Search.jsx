@@ -1,5 +1,6 @@
 import { styled, InputBase, alpha } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { useState } from 'react';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -42,7 +43,20 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   }
 }));
 
-export const SearchBar = () => {
+export const SearchBar = ({ items, filteredItems }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleInputChange = (e) => {
+    const input = e.target.value;
+    setSearchTerm(input);
+
+    const result = items[0].filter((item) =>
+      item.title.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+
+    filteredItems[1](result);
+  };
+
   return (
     <Search>
       <SearchIconWrapper>
@@ -51,6 +65,9 @@ export const SearchBar = () => {
       <StyledInputBase
         placeholder="Search…"
         inputProps={{ 'aria-label': 'search' }}
+        onChange={handleInputChange}
+        value={searchTerm}
+        type="text"
       />
     </Search>
   );

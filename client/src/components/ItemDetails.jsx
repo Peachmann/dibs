@@ -38,6 +38,7 @@ export const FullScreenDialog = ({
   const handleDibs = async () => {
     await dibsItem(item.ID, user);
     setDibsed(true);
+    item.is_dibsed = true;
     setOpenDibsAlertDialog(true);
   };
 
@@ -94,8 +95,8 @@ export const FullScreenDialog = ({
             >
               <Grid item xs={8}>
                 <Carousel showStatus={false} showIndicators={false}>
-                  {pictures.map((pic) => (
-                    <div>
+                  {pictures.map((pic, index) => (
+                    <div key={index}>
                       <img src={pic} />
                     </div>
                   ))}
